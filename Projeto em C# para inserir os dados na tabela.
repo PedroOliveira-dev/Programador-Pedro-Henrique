@@ -1,0 +1,28 @@
+using Npgsql;
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        var connString = "Host=myserver;Username=mylogin;Password=mypass;Database=mydatabase";
+        using (var conn = new NpgsqlConnection(connString))
+        {
+            conn.Open();
+
+            using (var cmd = new NpgsqlCommand())
+            {
+                cmd.Connection = conn;
+                cmd.CommandText = "INSERT INTO Users (FirstName, LastName, Email, Username, Gender, DateOfBirth, Country) VALUES (@firstName, @lastName, @Email, @Username, @Gender, @DateOfBirth, @Country)";
+                cmd.Parameters.AddWithValue("firstName", "John");
+                cmd.Parameters.AddWithValue("lastName", "Doe");
+                cmd.Parameters.AddWithValue("Email", "john.doe@example.com");
+                cmd.Parameters.AddWithValue("Username", "johndoe");
+                cmd.Parameters.AddWithValue("Gender", "male");
+                cmd.Parameters.AddWithValue("DateOfBirth", DateTime.Parse("1990-01-01"));
+                cmd.Parameters.AddWithValue("Country", "USA");
+                cmd.ExecuteNonQuery();
+            }
+        }
+    }
+}
